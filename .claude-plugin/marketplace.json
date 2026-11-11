@@ -1,0 +1,13 @@
+{
+  "name": "alpine-skills",
+  "owner": {
+    "name": "jmcph4"
+  },
+  "plugins": [
+    {
+      "name": "alpine-skills",
+      "source": "./",
+      "description": "A collection of Claude Skills."
+    }
+  ]
+}

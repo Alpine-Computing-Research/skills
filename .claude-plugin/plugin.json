@@ -1,0 +1,8 @@
+{
+  "name": "alpine-skills",
+  "description": "A collection of Claude Skills.",
+  "version": "0.1.0",
+  "author": {
+    "name": "jmcph4"
+  }
+}
