@@ -1,6 +1,6 @@
 ---
 name: lead-list
-description: Build an email outreach list of real, researched business leads for a given offer, where every lead has a business name, website URL, email address and status, plus, where they can be found, a contact person's first and last name, a publicly listed business phone number, notes and a location. Use this whenever the user asks for a lead list, an email list, an outreach or prospecting list, a cold email or cold calling list, prospects or leads to email or phone, "who should I contact", "find me businesses in X", "find businesses to pitch X to", or wants to turn a business idea or an ideal customer description into named businesses with contact details, even if they don't say "lead list" explicitly.
+description: Build an email outreach list of real, researched business leads for a given offer, where every lead has a business name, website URL, email address and status, plus, where they can be found, a contact person's first and last name, a publicly listed business phone number, notes and a location, and a high, medium or low rating of how likely the business is to be interested in the offer, by which the list is sorted. Use this whenever the user asks for a lead list, an email list, an outreach or prospecting list, a cold email or cold calling list, prospects or leads to email or phone, "who should I contact", "find me businesses in X", "find businesses to pitch X to", or wants to turn a business idea or an ideal customer description into named businesses with contact details, even if they don't say "lead list" explicitly.
 argument-hint: <what is being sold, to whom, and where>
 ---
 
@@ -35,7 +35,10 @@ Work out four things from `$ARGUMENTS` and the conversation:
   is in it.
 
 If the offer or the buyer is missing, ask one short question covering both
-rather than guessing; a list built for the wrong buyer is wasted in full. If
+rather than guessing; a list built for the wrong buyer is wasted in full,
+and without an offer there is nothing to rate interest against. If the
+user wants a plain list of a kind of business with no offer in mind, build
+it, leave the interest likelihood column empty, and sort by business name. If
 only the territory is missing, infer it from context (the user's location,
 the currency they use), say what you assumed, and proceed.
 
@@ -122,9 +125,8 @@ after decoding, the lead has no published email and is cut.
 
 ## Columns
 
-Each lead has exactly these nine columns and no others. Do not add columns
-for job titles, sources, scores or scripts; if the user wants more, they
-will ask.
+Each lead has exactly these ten columns and no others. Do not add columns
+for job titles, sources or scripts; if the user wants more, they will ask.
 
 | Column | Required | What goes in it |
 |---|---|---|
@@ -137,6 +139,7 @@ will ask.
 | Phone number | no | A published business number, in international format, e.g. `+61 7 3000 0000` |
 | Notes | no | Anything the user should know before making contact |
 | Location | no | Suburb or city, and state or country |
+| Interest likelihood | when there is an offer | How likely the business is to be interested in the offer: `high`, `medium` or `low` |
 
 A lead with any required column missing is not on the list. An optional
 column is filled in whenever research supports it and left empty otherwise;
@@ -211,6 +214,27 @@ found stays on the list.
 as its own site gives it. Enough to segment the list by area and to know
 the time zone; not a street address.
 
+**Interest likelihood.** One of `high`, `medium` or `low`: how likely this
+business is to be interested in the offer. It is a judgement for ordering
+the list, so that the user works the best leads first; it is relative to
+other leads, and even a `high` lead will usually not reply to a cold
+approach. Rate from evidence found in this session, not from a feeling
+about the business's name or website polish:
+
+| Rating | Evidence |
+|---|---|
+| `high` | A direct, current sign of the need: hiring for the job the offer replaces, a tender or public request for it, a visible instance of the problem the offer fixes, or use of the product the offer displaces |
+| `medium` | Fits the buyer on every visible count (sector, size, territory, ability to pay), with no direct sign of the need |
+| `low` | A partial fit: at the edge of the size, sector or territory, or already has an obvious in-house answer |
+
+A business that does not fit the buyer at all is cut by the filter, not
+listed as `low`. Do not hand out `high` to be encouraging: on most lists
+the majority of leads are `medium`, and if research found no direct sign
+for any lead, there are no `high` rows and the reply says so. Put the
+evidence behind every `high` in Notes, in a few words, so the user can see
+why the lead is at the top. Do not do extra research solely to refine a
+rating; rate on what sourcing and verification already turned up.
+
 ## The filter
 
 Find more candidates than requested, then cut any lead for which one of
@@ -247,7 +271,9 @@ loosen it.
 
 ## Output
 
-Do not rank or grade the leads. Sort them by business name.
+Sort the leads by interest likelihood, `high` first, then `medium`, then
+`low`, and by business name within each. Do not add any other rank, grade
+or score.
 
 Write the list to a CSV file, since that is what a mail-merge tool, a CRM
 or a spreadsheet will take. Name it `lead-list-<short-slug>-<YYYY-MM-DD>.csv`
@@ -255,7 +281,7 @@ in the current working directory unless the user names another place. The
 header row is exactly:
 
 ```
-business_name,website_url,email_address,status,first_name,last_name,phone_number,notes,location
+business_name,website_url,email_address,status,first_name,last_name,phone_number,notes,location,interest_likelihood
 ```
 
 Quote every field that contains a comma or a quotation mark, and write the
@@ -266,12 +292,14 @@ Then reply in the conversation with:
 
 1. The path to the file, the number of leads, how many have a named
    contact and how many have a phone number.
-2. One or two sentences on what the research showed about the market that the
+2. How many leads are `high`, `medium` and `low`, and the `high` leads by
+   name, each with the evidence for it in a few words.
+3. One or two sentences on what the research showed about the market that the
    user should know: where the leads cluster, a segment that turned out to
    publish no contact details.
 
 If the user asks for the list in the conversation rather than as a file, give
-it as a Markdown table with the same nine columns.
+it as a Markdown table with the same ten columns, in the same order.
 
 ## Outreach rules
 
@@ -299,7 +327,7 @@ The businesses below are invented to illustrate the format; real rows never
 are.
 
 ```
-business_name,website_url,email_address,status,first_name,last_name,phone_number,notes,location
-Harbourline Strata Management,https://harbourline.example,priya.raman@harbourline.example,new,Priya,Raman,+61 2 5550 0142,"ABN 12 345 678 901; senior portfolio manager; advertising for a defects coordinator","Parramatta NSW, Australia"
-"Kessler, Wade & Partners Strata",https://kesslerwade.example,enquiries@kesslerwade.example,new,,,,,"Geelong VIC, Australia"
+business_name,website_url,email_address,status,first_name,last_name,phone_number,notes,location,interest_likelihood
+Harbourline Strata Management,https://harbourline.example,priya.raman@harbourline.example,new,Priya,Raman,+61 2 5550 0142,"ABN 12 345 678 901; senior portfolio manager; advertising for a defects coordinator","Parramatta NSW, Australia",high
+"Kessler, Wade & Partners Strata",https://kesslerwade.example,enquiries@kesslerwade.example,new,,,,,"Geelong VIC, Australia",medium
 ```
