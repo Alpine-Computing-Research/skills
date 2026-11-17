@@ -301,26 +301,6 @@ Then reply in the conversation with:
 If the user asks for the list in the conversation rather than as a file, give
 it as a Markdown table with the same ten columns, in the same order.
 
-## Outreach rules
-
-Unsolicited commercial email and telemarketing are regulated nearly
-everywhere, and the rules differ by country and by whether the recipient is
-a business or a consumer: consent requirements, sender identification, a
-working unsubscribe, do-not-call registers and permitted calling hours.
-This skill limits the list to contact details a business publishes for
-itself and drops businesses that ask not to be solicited, which is the
-low-risk end, but that is not consent, nothing is checked against a
-do-not-call register, and the list is not legal clearance. Say so in one
-line when delivering the list, naming the law or register that applies in
-the territory if you know it (in Australia, the Spam Act 2003 and the Do
-Not Call Register), and leave it at that; do not lecture.
-
-If the buyer is a consumer rather than a business, do not build the list.
-Contacting private individuals using details gathered from the web is the
-case those rules exist to stop. Say why, and offer what does work for
-consumer offers: the businesses or intermediaries that already reach those
-consumers.
-
 ## Example
 
 The businesses below are invented to illustrate the format; real rows never
